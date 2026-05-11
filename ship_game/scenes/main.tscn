@@ -1,7 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://main_scene"]
+[gd_scene load_steps=16 format=3 uid="uid://main_scene"]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
 [ext_resource type="Script" path="res://scripts/ship.gd" id="2_ship"]
+[ext_resource type="Shader" path="res://assets/water_shader.gdshader" id="3_water_shader"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1"]
 size = Vector3(200, 1, 200)
@@ -12,21 +13,38 @@ size = Vector3(200, 1, 200)
 [sub_resource type="SphereShape3D" id="SphereShape3D_1"]
 radius = 1.0
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_1"]
-top_radius = 0.5
-bottom_radius = 0.5
-height = 2.0
+[sub_resource type="CylinderMesh" id="CylinderMesh_hull"]
+top_radius = 0.8
+bottom_radius = 0.6
+height = 3.0
+radial_segments = 16
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_water"]
-albedo_color = Color(0.1, 0.4, 0.8, 0.8)
-transparency = 1
-metallic = 0.0
-roughness = 0.2
+[sub_resource type="CylinderMesh" id="CylinderMesh_mast"]
+top_radius = 0.15
+bottom_radius = 0.2
+height = 4.0
+radial_segments = 8
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ship"]
-albedo_color = Color(0.6, 0.3, 0.1, 1.0)
+[sub_resource type="BoxMesh" id="BoxMesh_sail"]
+size = Vector3(2.5, 3.0, 0.1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_water"]
+shader = ExtResource("3_water_shader")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hull"]
+albedo_color = Color(0.55, 0.27, 0.07, 1.0)
 metallic = 0.3
 roughness = 0.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mast"]
+albedo_color = Color(0.4, 0.25, 0.1, 1.0)
+metallic = 0.1
+roughness = 0.7
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sail"]
+albedo_color = Color(0.95, 0.95, 0.9, 1.0)
+metallic = 0.0
+roughness = 0.8
 
 [sub_resource type="Environment" id="Environment_default"]
 background_mode = 1
@@ -54,18 +72,35 @@ shape = SubResource("BoxShape3D_1")
 
 [node name="Ship" type="RigidBody3D" parent="."]
 mass = 10.0
-linear_damp = 2.0
+linear_damp = 1.0
 angular_damp = 10.0
-freeze_axis = Vector3(1, 0, 1)
+axis_lock_angular_x = true
+axis_lock_angular_z = true
+axis_lock_linear_y = true
 script = ExtResource("2_ship")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 collision_layer = 2
 collision_mask = 1
 
 [node name="Hull" type="MeshInstance3D" parent="Ship"]
-mesh = SubResource("CylinderMesh_1")
-surface_material_override/0 = SubResource("StandardMaterial3D_ship")
+mesh = SubResource("CylinderMesh_hull")
+surface_material_override/0 = SubResource("StandardMaterial3D_hull")
 transform = Transform3D(1, 0, 0, 0, 0.5, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="Bow" type="MeshInstance3D" parent="Ship"]
+mesh = SubResource("CylinderMesh_hull")
+surface_material_override/0 = SubResource("StandardMaterial3D_hull")
+transform = Transform3D(0.6, 0, 0, 0, 0.3, 0, 0, 0, 0.8, 0, 0.8, 0)
+
+[node name="Mast" type="MeshInstance3D" parent="Ship"]
+mesh = SubResource("CylinderMesh_mast")
+surface_material_override/0 = SubResource("StandardMaterial3D_mast")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+
+[node name="Sail" type="MeshInstance3D" parent="Ship"]
+mesh = SubResource("BoxMesh_sail")
+surface_material_override/0 = SubResource("StandardMaterial3D_sail")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 2.5, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Ship"]
 shape = SubResource("SphereShape3D_1")

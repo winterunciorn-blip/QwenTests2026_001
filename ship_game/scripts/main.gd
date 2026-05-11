@@ -7,6 +7,7 @@ extends Node3D
 
 var target_position: Vector3 = Vector3.ZERO
 var is_moving: bool = false
+var stop_distance: float = 0.5
 
 func _ready() -> void:
 	# Initialize target position to ship's starting position
@@ -29,40 +30,25 @@ func _input(event: InputEvent) -> void:
 		if result:
 			target_position = result.position
 			is_moving = true
-			# Rotate ship to face the target
-			_rotate_ship_towards_target()
 
 func _process(delta: float) -> void:
 	if is_moving:
-		# Move ship towards target
+		# Calculate direction to target
 		var direction = (target_position - ship.global_transform.origin).normalized()
 		var distance = ship.global_transform.origin.distance_to(target_position)
 		
-		if distance < 0.5:
+		if distance < stop_distance:
 			is_moving = false
-			ship.linear_velocity = Vector3.ZERO
+			ship.set_target_speed(0.0)
 		else:
-			# Apply force in the direction the ship is facing
-			var forward = -ship.global_transform.basis.z
-			var speed = 15.0
-			ship.linear_velocity = forward * speed
+			# Set target speed for smooth acceleration
+			ship.set_target_speed(ship.max_speed)
 			
 		# Continuously rotate ship towards target while moving
-		_rotate_ship_towards_target()
+		ship.rotate_towards(direction, delta)
 	
 	# Update camera to follow ship
 	_update_camera()
-
-func _rotate_ship_towards_target() -> void:
-	var direction = (target_position - ship.global_transform.origin).normalized()
-	if direction.length() > 0.01:
-		var target_basis = Basis()
-		target_basis.z = -direction
-		target_basis.x = direction.cross(Vector3.UP).normalized()
-		target_basis.y = Vector3.UP
-		
-		var target_quat = Quaternion(target_basis)
-		ship.rotation = target_quat.get_euler()
 
 func _update_camera() -> void:
 	# Position camera behind and above the ship, following its direction
