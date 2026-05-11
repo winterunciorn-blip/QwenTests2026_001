@@ -1,7 +1,7 @@
 shader_type spatial;
 render_mode unshaded, cull_disabled;
 
-uniform vec4 water_color : hint_color = vec4(0.1, 0.4, 0.8, 0.8);
+uniform vec4 water_color : source_color = vec4(0.1, 0.4, 0.8, 0.8);
 uniform float wave_height : hint_range(0.0, 1.0) = 0.3;
 uniform float wave_speed = 1.0;
 uniform float wave_scale = 2.0;
