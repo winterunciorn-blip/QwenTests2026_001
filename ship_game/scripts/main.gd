@@ -30,23 +30,9 @@ func _input(event: InputEvent) -> void:
 		if result:
 			target_position = result.position
 			is_moving = true
+			ship.set_target(target_position)
 
 func _process(delta: float) -> void:
-	if is_moving:
-		# Calculate direction to target
-		var direction = (target_position - ship.global_transform.origin).normalized()
-		var distance = ship.global_transform.origin.distance_to(target_position)
-		
-		if distance < stop_distance:
-			is_moving = false
-			ship.set_target_speed(0.0)
-		else:
-			# Set target speed for smooth acceleration
-			ship.set_target_speed(ship.max_speed)
-			
-		# Continuously rotate ship towards target while moving
-		ship.rotate_towards(direction, delta)
-	
 	# Update camera to follow ship
 	_update_camera()
 
