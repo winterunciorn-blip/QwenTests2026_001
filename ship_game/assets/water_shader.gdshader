@@ -1,5 +1,5 @@
 shader_type spatial;
-render_mode depth_draw_opaque, cull_back, blend_mix, transparent, specular, srgb_vertex_color;
+render_mode unshaded, world_vertex_coords;
 
 uniform vec4 water_color : source_color = vec4(0.0, 0.4, 0.8, 0.9);
 uniform float wave_height : hint_range(0.0, 2.0) = 0.4;
@@ -17,13 +17,6 @@ void vertex() {
 	// Create wave effect
 	wave_factor = sin(world_pos.x * wave_scale + t) * cos(world_pos.z * wave_scale + t) * wave_height;
 	VERTEX.y += wave_factor;
-	
-	// Calculate normals for lighting
-	NORMAL = normalize(vec3(
-		-sin(world_pos.x * wave_scale + t) * wave_scale * wave_height,
-		1.0,
-		-cos(world_pos.z * wave_scale + t) * wave_scale * wave_height
-	));
 }
 
 void fragment() {
