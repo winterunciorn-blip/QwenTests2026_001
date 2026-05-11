@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://main_scene"]
+[gd_scene load_steps=8 format=3 uid="uid://main_scene"]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
 [ext_resource type="Script" path="res://scripts/ship.gd" id="2_ship"]
@@ -27,6 +27,14 @@ roughness = 0.2
 albedo_color = Color(0.6, 0.3, 0.1, 1.0)
 metallic = 0.3
 roughness = 0.5
+
+[sub_resource type="Environment" id="Environment_default"]
+background_mode = 1
+background_color = Color(0.4, 0.6, 0.9, 1.0)
+ambient_light_source = 2
+ambient_light_color = Color(0.5, 0.5, 0.5, 1.0)
+glow_enabled = false
+ssao_enabled = true
 
 [node name="Main" type="Node3D"]
 script = ExtResource("1_main")
@@ -77,11 +85,3 @@ shadow_enabled = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_default")
-
-[sub_resource type="Environment" id="Environment_default"]
-background_mode = 1
-background_color = Color(0.4, 0.6, 0.9, 1.0)
-ambient_light_source = 2
-ambient_light_color = Color(0.5, 0.5, 0.5, 1.0)
-glow_enabled = false
-ssao_enabled = true
