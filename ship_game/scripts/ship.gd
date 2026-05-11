@@ -19,13 +19,16 @@ func _physics_process(delta: float) -> void:
 	# Keep ship constrained to horizontal plane (Y = 0)
 	global_transform.origin.y = 0.0
 	
+	# Debug: print current position every frame
+	print("DEBUG Ship Position: ", global_transform.origin, " Target: ", target_position, " Moving: ", is_moving)
+	
 	if not is_moving:
 		# Smooth deceleration to stop
 		var current_speed = linear_velocity.length()
 		if current_speed > 0.1:
 			current_speed -= acceleration * 2.0 * delta
 			current_speed = max(current_speed, 0)
-			var forward = -global_transform.basis.z
+			var forward = global_transform.basis.z  # Исправлено: модель смотрит по +Z
 			linear_velocity = forward * current_speed
 		else:
 			linear_velocity = Vector3.ZERO
@@ -36,14 +39,17 @@ func _physics_process(delta: float) -> void:
 	direction.y = 0.0
 	var distance = direction.length()
 	
+	print("DEBUG: Distance to target: ", distance)
+	
 	if distance < 0.5:
 		is_moving = false
+		print("DEBUG: Reached target, stopping")
 		return
 	
 	direction = direction.normalized()
 	
 	# Rotate ship towards target
-	var current_forward = -global_transform.basis.z
+	var current_forward = global_transform.basis.z  # Исправлено: модель смотрит по +Z
 	var angle = current_forward.signed_angle_to(direction, Vector3.UP)
 	
 	if abs(angle) > 0.01:
@@ -58,7 +64,7 @@ func _physics_process(delta: float) -> void:
 		current_speed = min(current_speed, max_speed)
 	
 	# Apply velocity in the direction the ship is facing
-	var forward = -global_transform.basis.z
+	var forward = global_transform.basis.z  # Исправлено: толкаем по +Z
 	linear_velocity = forward * current_speed
 
 func set_target(pos: Vector3) -> void:

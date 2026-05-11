@@ -1,5 +1,5 @@
 shader_type spatial;
-render_mode depth_draw_opaque, cull_back, shadows_enabled;
+render_mode depth_draw_opaque, cull_back;
 
 uniform vec4 water_color : source_color = vec4(0.0, 0.4, 0.8, 0.9);
 uniform float wave_height : hint_range(0.0, 2.0) = 0.4;
@@ -26,7 +26,7 @@ void vertex() {
 }
 
 void fragment() {
-	vec3 view_dir = normalize(CAMERA_POSITION - (MODEL_MATRIX * vec4(0.0, 0.0, 0.0, 1.0)).xyz);
+	vec3 view_dir = normalize(VIEWER_POSITION - (MODEL_MATRIX * vec4(0.0, 0.0, 0.0, 1.0)).xyz);
 	vec3 normal = normalize(NORMAL);
 	
 	// Light direction

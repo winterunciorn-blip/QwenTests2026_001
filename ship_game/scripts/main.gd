@@ -23,6 +23,7 @@ func _input(event: InputEvent) -> void:
 		var to = from + camera.project_ray_normal(mouse_pos) * 1000
 		
 		var space_state = ship.get_world_3d().direct_space_state
+		# Ray query: check collision with water layer (layer 1)
 		var query = PhysicsRayQueryParameters3D.create(from, to, 1, [ship])
 		query.exclude = [ship]
 		
@@ -31,6 +32,17 @@ func _input(event: InputEvent) -> void:
 			target_position = result.position
 			is_moving = true
 			ship.set_target(target_position)
+			print("DEBUG: Click target set to: ", target_position)
+		else:
+			print("DEBUG: Raycast missed! From: ", from, " To: ", to)
+			# Fallback: project onto Y=0 plane manually
+			var dir = camera.project_ray_normal(mouse_pos)
+			if abs(dir.y) > 0.001:
+				var t = -from.y / dir.y
+				target_position = from + dir * t
+				is_moving = true
+				ship.set_target(target_position)
+				print("DEBUG: Fallback target set to: ", target_position)
 
 func _process(delta: float) -> void:
 	# Update camera to follow ship
