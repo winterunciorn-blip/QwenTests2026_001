@@ -1,8 +1,9 @@
-[gd_scene load_steps=16 format=3 uid="uid://main_scene"]
+[gd_scene load_steps=17 format=3 uid="uid://main_scene"]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
 [ext_resource type="Script" path="res://scripts/ship.gd" id="2_ship"]
 [ext_resource type="Shader" path="res://assets/water_shader.gdshader" id="3_water_shader"]
+[ext_resource type="Script" path="res://scripts/water.gd" id="4_water"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1"]
 size = Vector3(200, 1, 200)
@@ -63,6 +64,7 @@ surface_material_override/0 = SubResource("ShaderMaterial_water")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 collision_layer = 1
 collision_mask = 0
+script = ExtResource("4_water")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Water"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
