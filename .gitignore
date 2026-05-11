@@ -1,0 +1,8 @@
+```
+# Godot-specific ignores
+*.import
+*.uid
+.project
+.godot/
+export_presets.cfg
+```
