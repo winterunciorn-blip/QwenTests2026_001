@@ -6,6 +6,7 @@ uniform float wave_height : hint_range(0.0, 2.0) = 0.4;
 uniform float wave_speed = 1.5;
 uniform float wave_scale = 0.5;
 uniform float time : hint_range(0, 1000) = 0.0;
+uniform vec3 camera_position = vec3(0.0, 0.0, 0.0);
 
 varying float wave_factor;
 
@@ -26,7 +27,7 @@ void vertex() {
 }
 
 void fragment() {
-	vec3 view_dir = normalize(VIEWER_POSITION - (MODEL_MATRIX * vec4(0.0, 0.0, 0.0, 1.0)).xyz);
+	vec3 view_dir = normalize(camera_position - (MODEL_MATRIX * vec4(0.0, 0.0, 0.0, 1.0)).xyz);
 	vec3 normal = normalize(NORMAL);
 	
 	// Light direction
