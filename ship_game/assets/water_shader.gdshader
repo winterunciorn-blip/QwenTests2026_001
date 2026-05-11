@@ -5,27 +5,28 @@ uniform vec4 water_color : source_color = vec4(0.0, 0.4, 0.8, 0.9);
 uniform float wave_height : hint_range(0.0, 2.0) = 0.4;
 uniform float wave_speed = 1.5;
 uniform float wave_scale = 0.5;
+uniform float time : hint_range(0, 1000) = 0.0;
 
 varying float wave_factor;
 
 void vertex() {
-	vec4 world_pos = WORLD_MATRIX * vec4(VERTEX, 1.0);
-	float time = TIME * wave_speed;
+	vec4 world_pos = MODEL_MATRIX * vec4(VERTEX, 1.0);
+	float t = time * wave_speed;
 	
 	// Create wave effect
-	wave_factor = sin(world_pos.x * wave_scale + time) * cos(world_pos.z * wave_scale + time) * wave_height;
+	wave_factor = sin(world_pos.x * wave_scale + t) * cos(world_pos.z * wave_scale + t) * wave_height;
 	VERTEX.y += wave_factor;
 	
 	// Calculate normals for lighting
 	NORMAL = normalize(vec3(
-		-sin(world_pos.x * wave_scale + time) * wave_scale * wave_height,
+		-sin(world_pos.x * wave_scale + t) * wave_scale * wave_height,
 		1.0,
-		-cos(world_pos.z * wave_scale + time) * wave_scale * wave_height
+		-cos(world_pos.z * wave_scale + t) * wave_scale * wave_height
 	));
 }
 
 void fragment() {
-	vec3 view_dir = normalize(camera_pos - WORLD_MATRIX[3].xyz);
+	vec3 view_dir = normalize(CAMERA_POSITION - (MODEL_MATRIX * vec4(0.0, 0.0, 0.0, 1.0)).xyz);
 	vec3 normal = normalize(NORMAL);
 	
 	// Light direction
